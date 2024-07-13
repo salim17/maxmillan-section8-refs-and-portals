@@ -4,10 +4,13 @@ import { forwardRef, useImperativeHandle, useRef } from "react";
 // hence we need to use forwardRef function from react
 // forwardRef recieves ref as the second argument, first argument is props
 const forwardedModal = forwardRef(function ResultModal(
-  { result, targetTime },
+  { targetTime, remainingTime, handleReset },
   ref
 ) {
   const dialog = useRef();
+
+  const userLost = remainingTime <= 0;
+  const formattedRemainingTime = (remainingTime / 1000).toFixed(2);
 
   // this hook is used to uncouple the tight binding of this component with ref.
   // now using this we can change dialog html element to a div.
@@ -22,15 +25,16 @@ const forwardedModal = forwardRef(function ResultModal(
 
   return (
     <dialog className="result-modal" ref={dialog}>
-      <h2>You {result} </h2>
+      {userLost && <h2>You lost </h2>}
       <p>
         The target time was <strong>{targetTime} seconds</strong>
       </p>
       <p>
-        You stopped the timer with <strong>X seconds left</strong>
+        You stopped the timer with{" "}
+        <strong>{formattedRemainingTime} seconds left</strong>
       </p>
       <form method="dialog">
-        <button>Close</button>
+        <button onSubmit={handleReset}>Close</button>
       </form>
     </dialog>
   );
