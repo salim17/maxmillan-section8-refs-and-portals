@@ -1,4 +1,7 @@
+// everything from react package will work in react native as well
 import { forwardRef, useImperativeHandle, useRef } from "react";
+// createPortal from react-dom package, will not work with react native
+import { createPortal } from "react-dom";
 
 // Refs cannot be forwarded in the form or props
 // hence we need to use forwardRef function from react
@@ -24,7 +27,8 @@ const forwardedModal = forwardRef(function ResultModal(
     };
   });
 
-  return (
+  // createPortal to render this in specific place in the DOM which is passed as the second argument to this function
+  return createPortal(
     <dialog className="result-modal" ref={dialog} onClose={onReset}>
       {userLost && <h2>You lost </h2>}
       {!userLost && <h2>Your Score: {score} </h2>}
@@ -38,7 +42,8 @@ const forwardedModal = forwardRef(function ResultModal(
       <form method="dialog" onSubmit={onReset}>
         <button>Close</button>
       </form>
-    </dialog>
+    </dialog>,
+    document.getElementById("modal")
   );
 });
 
