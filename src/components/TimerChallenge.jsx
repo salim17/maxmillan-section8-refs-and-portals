@@ -6,21 +6,25 @@ export default function TimerChallenge({ title, targetTime }) {
   const [timerExpired, setTimerExpired] = useState(false);
 
   const timer = useRef();
+  const dialog = useRef();
 
   function handleStart() {
     timer.current = setTimeout(() => {
       setTimerExpired(true);
+      dialog.current.showModal();
     }, targetTime * 1000);
 
     setTimerStarted(true);
   }
+
+  console.log('Timer challenge loading...')
 
   function handleStop() {
     clearTimeout(timer.current); // will not trigger TimerChallenge (this component) re-rendering
   }
   return (
     <>
-    {timerExpired && <ResultModal targetTime={targetTime} result="lost" /> }
+    <ResultModal ref={dialog} targetTime={targetTime} result="lost" /> {/* since it is invisible in the dom by default */}
     <section className="challenge">
       <h2>{title}</h2>
       {timerExpired && <p>You Lost!</p>}
